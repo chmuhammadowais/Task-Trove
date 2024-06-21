@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Task-Trove</string>
+    <string name="logo">Logo</string>
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="image">image</string>
 </resources>
