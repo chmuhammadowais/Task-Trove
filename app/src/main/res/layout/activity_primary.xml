@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/menu"
+        android:layout_alignParentTop="true"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:backgroundTint="@color/light_gray"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="15dp">
+
+            <ImageView
+                android:id="@+id/home_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/image"
+                android:src="@drawable/home"
+                android:scaleType="centerInside"/>
+
+            <ImageView
+                android:id="@+id/categories_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/image"
+                android:src="@drawable/categories"
+                android:scaleType="centerInside"/>
+
+            <ImageView
+                android:id="@+id/search_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/image"
+                android:src="@drawable/search"
+                android:scaleType="centerInside"/>
+
+            <ImageView
+                android:id="@+id/analytics_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/image"
+                android:src="@drawable/donut_chart"
+                android:scaleType="centerInside"/>
+
+            <ImageView
+                android:id="@+id/account_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/image"
+                android:src="@drawable/account"
+                android:scaleType="centerInside"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

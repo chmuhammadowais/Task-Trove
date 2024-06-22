@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Everything's good", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this, PrimaryActivity.class);
+                startActivity(i);
             }
         });
 
