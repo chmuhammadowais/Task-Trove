@@ -1,64 +1,131 @@
 package com.example.task_trove;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private TextView emptyView;
+    private TaskAdapter taskAdapter;
+    private ImageView add_btn;
+    private List<Task> taskList;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        recyclerView = view.findViewById(R.id.recycler_view);
+        emptyView = view.findViewById(R.id.empty_view);
+        add_btn = view.findViewById(R.id.add_btn);
+
+        add_btn.setOnClickListener(v->{
+            showAddTaskDialog();
+        });
+
+        taskList = new ArrayList<>();
+        taskList.add(new Task("Task 1", "Description 1", "2024-06-01", 50));
+        taskList.add(new Task("Task 2", "Description 2", "2024-06-02", 10));
+        taskList.add(new Task("Task 3", "Description 3", "2024-06-03", 40));
+        taskList.add(new Task("Task 4", "Description 4", "2024-06-03", 50));
+        taskList.add(new Task("Task 5", "Description 5", "2024-06-03", 40));
+        taskAdapter = new TaskAdapter(getContext(), taskList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(taskAdapter);
+
+        updateEmptyView();
+
+        taskAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                updateEmptyView();
+            }
+        });
+
+        return view;
+    }
+
+    private void updateEmptyView() {
+        if (taskAdapter.getItemCount() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
+    private void showAddTaskDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Add New Task");
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        // Inflate the custom layout for the dialog
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_task, null);
+        builder.setView(dialogView);
+
+        EditText editTaskName = dialogView.findViewById(R.id.edit_task_name);
+        EditText editTaskDescription = dialogView.findViewById(R.id.edit_task_description);
+        EditText editTasCategory = dialogView.findViewById(R.id.edit_task_category);
+
+        // Set up the buttons
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String taskName = editTaskName.getText().toString().trim();
+                String taskDescription = editTaskDescription.getText().toString().trim();
+                String taskCategory = editTasCategory.getText().toString();
+                String taskDate = "";
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    taskDate = String.valueOf(LocalDate.now());
+                }
+                // Validate input if needed
+                if (!taskName.isEmpty() && !taskDescription.isEmpty()) {
+                    // Create a new Task object or add it to your list
+                    Task newTask = null;
+                    if(!taskCategory.isEmpty()){
+                        newTask = new Task(taskName, taskDescription, taskDate,taskCategory, 0);
+                    }
+                    else{
+                        newTask = new Task(taskName, taskDescription, taskDate, 0);
+                    }
+
+                    // Add newTask to your RecyclerView adapter's dataset
+                    taskList.add(newTask);
+                    taskAdapter.notifyDataSetChanged(); // Notify adapter of data change
+
+                    Toast.makeText(requireContext(), "Task added successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "Please enter task name and description", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
