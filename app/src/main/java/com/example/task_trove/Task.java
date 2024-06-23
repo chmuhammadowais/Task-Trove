@@ -18,7 +18,7 @@ public class Task {
         this.name = name;
         this.description = description;
         this.date = date;
-        this.category = null;
+        this.category = "None";
         this.status = status;
     }
 
@@ -28,4 +28,6 @@ public class Task {
     public String getDate() { return date; }
     public int getStatus() { return status; }
     public void setStatus(int task_status) { status = task_status; }
+    public String getCategory(){return category; }
+
 }

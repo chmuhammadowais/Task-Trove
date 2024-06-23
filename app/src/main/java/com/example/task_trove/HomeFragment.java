@@ -28,7 +28,7 @@ public class HomeFragment extends Fragment {
     private TextView emptyView;
     private TaskAdapter taskAdapter;
     private ImageView add_btn;
-    private List<Task> taskList;
+    public static List<Task> taskList;
 
     @Nullable
     @Override
@@ -44,11 +44,11 @@ public class HomeFragment extends Fragment {
         });
 
         taskList = new ArrayList<>();
-        taskList.add(new Task("Task 1", "Description 1", "2024-06-01", 50));
-        taskList.add(new Task("Task 2", "Description 2", "2024-06-02", 10));
-        taskList.add(new Task("Task 3", "Description 3", "2024-06-03", 40));
-        taskList.add(new Task("Task 4", "Description 4", "2024-06-03", 50));
-        taskList.add(new Task("Task 5", "Description 5", "2024-06-03", 40));
+        taskList.add(new Task("Task 1", "Description 1", "2024-06-01","Hobby", 50));
+        taskList.add(new Task("Task 2", "Description 2", "2024-06-02","Work", 10));
+        taskList.add(new Task("Task 3", "Description 3", "2024-06-03", "Gym",40));
+        taskList.add(new Task("Task 4", "Description 4", "2024-06-03","None", 50));
+        taskList.add(new Task("Task 5", "Description 5", "2024-06-03","None", 40));
         taskAdapter = new TaskAdapter(getContext(), taskList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
