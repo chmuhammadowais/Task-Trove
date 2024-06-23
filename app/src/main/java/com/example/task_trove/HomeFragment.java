@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 
@@ -28,7 +29,8 @@ public class HomeFragment extends Fragment {
     private TextView emptyView;
     private TaskAdapter taskAdapter;
     private ImageView add_btn;
-    public static List<Task> taskList;
+    public static List<Task> taskList = new ArrayList<>();
+    private String categoryFilter;
 
     @Nullable
     @Override
@@ -39,17 +41,15 @@ public class HomeFragment extends Fragment {
         emptyView = view.findViewById(R.id.empty_view);
         add_btn = view.findViewById(R.id.add_btn);
 
-        add_btn.setOnClickListener(v->{
-            showAddTaskDialog();
-        });
+        if (getArguments() != null) {
+            categoryFilter = getArguments().getString("categoryFilter");
+        }
 
-        taskList = new ArrayList<>();
-        taskList.add(new Task("Task 1", "Description 1", "2024-06-01","Hobby", 50));
-        taskList.add(new Task("Task 2", "Description 2", "2024-06-02","Work", 10));
-        taskList.add(new Task("Task 3", "Description 3", "2024-06-03", "Gym",40));
-        taskList.add(new Task("Task 4", "Description 4", "2024-06-03","None", 50));
-        taskList.add(new Task("Task 5", "Description 5", "2024-06-03","None", 40));
-        taskAdapter = new TaskAdapter(getContext(), taskList);
+        add_btn.setOnClickListener(v -> showAddTaskDialog());
+
+        initializeTaskList();
+        List<Task> filteredTaskList = getFilteredTasks(taskList, categoryFilter);
+        taskAdapter = new TaskAdapter(getContext(), filteredTaskList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(taskAdapter);
@@ -67,6 +67,23 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    private void initializeTaskList() {
+        if (taskList.isEmpty()) {
+            taskList.add(new Task("Task 1", "Description 1", "2024-06-01", "Hobby", 50));
+            taskList.add(new Task("Task 2", "Description 2", "2024-06-02", "Work", 10));
+            taskList.add(new Task("Task 3", "Description 3", "2024-06-03", "Gym", 40));
+            taskList.add(new Task("Task 4", "Description 4", "2024-06-03", "None", 50));
+            taskList.add(new Task("Task 5", "Description 5", "2024-06-03", "None", 40));
+        }
+    }
+
+    private List<Task> getFilteredTasks(List<Task> tasks, String category) {
+        if (category == null || category.isEmpty()) {
+            return tasks;
+        }
+        return tasks.stream().filter(task -> category.equals(task.getCategory())).collect(Collectors.toList());
+    }
+
     private void updateEmptyView() {
         if (taskAdapter.getItemCount() == 0) {
             emptyView.setVisibility(View.VISIBLE);
@@ -76,11 +93,11 @@ public class HomeFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
+
     private void showAddTaskDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Add New Task");
 
-        // Inflate the custom layout for the dialog
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_task, null);
         builder.setView(dialogView);
 
@@ -88,7 +105,6 @@ public class HomeFragment extends Fragment {
         EditText editTaskDescription = dialogView.findViewById(R.id.edit_task_description);
         EditText editTasCategory = dialogView.findViewById(R.id.edit_task_category);
 
-        // Set up the buttons
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -96,25 +112,15 @@ public class HomeFragment extends Fragment {
                 String taskName = editTaskName.getText().toString().trim();
                 String taskDescription = editTaskDescription.getText().toString().trim();
                 String taskCategory = editTasCategory.getText().toString();
-                String taskDate = "";
+                String taskDate = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    taskDate = String.valueOf(LocalDate.now());
+                    taskDate = LocalDate.now().toString();
                 }
-                // Validate input if needed
+
                 if (!taskName.isEmpty() && !taskDescription.isEmpty()) {
-                    // Create a new Task object or add it to your list
-                    Task newTask = null;
-                    if(!taskCategory.isEmpty()){
-                        newTask = new Task(taskName, taskDescription, taskDate,taskCategory, 0);
-                    }
-                    else{
-                        newTask = new Task(taskName, taskDescription, taskDate, 0);
-                    }
-
-                    // Add newTask to your RecyclerView adapter's dataset
+                    Task newTask = new Task(taskName, taskDescription, taskDate, taskCategory.isEmpty() ? "None" : taskCategory, 0);
                     taskList.add(newTask);
-                    taskAdapter.notifyDataSetChanged(); // Notify adapter of data change
-
+                    taskAdapter.notifyDataSetChanged();
                     Toast.makeText(requireContext(), "Task added successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(requireContext(), "Please enter task name and description", Toast.LENGTH_SHORT).show();
@@ -123,8 +129,6 @@ public class HomeFragment extends Fragment {
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        // Create and show the dialog
         AlertDialog dialog = builder.create();
         dialog.show();
     }
