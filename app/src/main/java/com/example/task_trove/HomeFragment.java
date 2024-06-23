@@ -28,7 +28,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView emptyView;
     private TaskAdapter taskAdapter;
-    private ImageView add_btn;
     public static List<Task> taskList = new ArrayList<>();
     private String categoryFilter;
 
@@ -39,7 +38,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
         emptyView = view.findViewById(R.id.empty_view);
-        add_btn = view.findViewById(R.id.add_btn);
+        ImageView add_btn = view.findViewById(R.id.add_btn);
 
         if (getArguments() != null) {
             categoryFilter = getArguments().getString("categoryFilter");

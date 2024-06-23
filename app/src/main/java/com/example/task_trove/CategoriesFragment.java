@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,25 +18,19 @@ import java.util.Set;
 
 public class CategoriesFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private CategoryAdapter categoryAdapter;
-    private List<String> categoriesList;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Task> tasks = HomeFragment.taskList;
         Set<String> uniqueCategories = CategoryUtils.getUniqueCategories(tasks);
-        categoriesList = new ArrayList<>(uniqueCategories);
+        List<String> categoriesList = new ArrayList<>(uniqueCategories);
 
-        categoryAdapter = new CategoryAdapter(getContext(), categoriesList, category -> {
-            // Handle the click event
-            navigateToHomeFragmentWithCategory(category);
-        });
+        // Handle the click event
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoriesList, this::navigateToHomeFragmentWithCategory);
         recyclerView.setAdapter(categoryAdapter);
 
         return view;

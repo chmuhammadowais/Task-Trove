@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
-    private final List<Task> taskList;
+    private List<Task> taskList;
     private final Context context;
 
     public TaskAdapter(Context context, List<Task> taskList) {
@@ -59,6 +59,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         notifyDataSetChanged(); // Notify adapter to refresh the data
     }
 
+    public void updateTaskList(List<Task> filteredTasks) {
+        this.taskList = filteredTasks;
+        notifyDataSetChanged();
+    }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
