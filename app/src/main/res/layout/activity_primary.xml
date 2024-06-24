@@ -55,15 +55,6 @@
                 android:scaleType="centerInside"/>
 
             <ImageView
-                android:id="@+id/analytics_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:contentDescription="@string/image"
-                android:src="@drawable/donut_chart"
-                android:scaleType="centerInside"/>
-
-            <ImageView
                 android:id="@+id/account_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

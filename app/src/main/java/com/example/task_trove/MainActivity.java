@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Everything's good", Toast.LENGTH_SHORT).show();
+                //Perform relevant API call then handle the Intent accordingly
                 Intent i = new Intent(this, PrimaryActivity.class);
                 startActivity(i);
             }

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 public class SearchFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private List<Task> allTasks;
 
@@ -32,7 +31,7 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         TextInputEditText searchEdt = view.findViewById(R.id.search_edt);
 
         // Set up RecyclerView with an initially empty list

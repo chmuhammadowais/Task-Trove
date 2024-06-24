@@ -36,6 +36,7 @@ public class SignupActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Everything's good", Toast.LENGTH_SHORT).show();
+                //Perform relevant API call
             }
         });
 

@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +61,27 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+
+        EditText name_edt = view.findViewById(R.id.name_edt);
+        EditText phone_edt = view.findViewById(R.id.phone_edt);
+        EditText email_edt = view.findViewById(R.id.email_edt);
+        EditText password_edt = view.findViewById(R.id.password_edt);
+        Button update_btn = view.findViewById(R.id.update_btn);
+
+        update_btn.setOnClickListener(v -> {
+            if(name_edt.getText().toString().isEmpty() || phone_edt.getText().toString().isEmpty() || email_edt.getText().toString().isEmpty() || password_edt.getText().toString().isEmpty()){
+                Toast.makeText(requireContext(), "Please provide all fields", Toast.LENGTH_SHORT).show();
+            } else if (!email_edt.getText().toString().contains("@") || !email_edt.getText().toString().endsWith(".com")) {
+                Toast.makeText(requireContext(), "Please provide a valid email", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(requireContext(), "Everything's good", Toast.LENGTH_SHORT).show();
+                //Perform relevant API call
+            }
+        });
+
+        // Return the inflated view with the event listeners set up
+        return view;
     }
 }
